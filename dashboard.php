@@ -1,10 +1,11 @@
 <?php
 session_start();
 
-$_SESSION['first_name'];
-$_SESSION['last_name'];
-$_SESSION['email'];
-$_SESSION['phone'];
+  $_SESSION['first_name'];
+  $_SESSION['last_name'];
+  $_SESSION['email'];
+  $_SESSION['phone'];
+  $_SESSION['days'];
 
 ?>
 
@@ -34,6 +35,10 @@ $_SESSION['phone'];
         <td><?= $_SESSION['phone'];?> </td>
     </tr>
     </table>
-</div>
+    </div>
+
+    <div class="container">
+       <?= $_SESSION['days']?> 
+   </div>
 </body>
 </html>

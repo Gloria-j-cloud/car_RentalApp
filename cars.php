@@ -1,5 +1,13 @@
  <?php 
-    $cars = [
+
+    require_once "config/db-connect.php";
+     
+    $sql = "SELECT * FROM cars";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /*
+    = [
         [
         'id' => 1,
         'make' => 'toyota',
@@ -62,21 +70,23 @@
 
 
     ]
+
+    */
     ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Hire App</title>
 
-   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-</head>
-<body>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    </head>
+    <body>
     
-<div class= "container  mt-5 mb-5">
-   <table class="table">
+    <div class= "container  mt-5 mb-5">
+    <table class="table">
       <thead>
         <th>id</th>
         <th>make</th>
@@ -88,24 +98,43 @@
       </thead>
 
       <?php foreach($cars as $car) {?>
-     <tr>
+      <tr>
         
-        <td><?= $car['id'] ?></td>
-        <td><?= $car['make'] ?></td>
-        <td><?= $car['model'] ?></td>
+        <td><?= $car['car_id'] ?></td>
+        <td><?= $car['car_make'] ?></td>
+        <td><?= $car['car_model'] ?></td>
         <td><?= $car['year'] ?></td>
         <td><?= $car['daily_rate'] ?></td>
-        <td><?= $car['status'] ?></td>
-        <td><a class="btn btn-primary btn-sm" href="car.php?id=<?=$car['id'] ?>";>View car</a></td>
-    </tr>
+        <td>
+              <?php if($car['status']==='available'){?>
+            <button class="btn btn-success"><?= $car['status'] ?></button>
+            <?php }else {?>
+               <button class="btn btn-danger btn-lg"><?= $car['status'] ?></button>
+            <?php }?>
 
-    <?php } ?>
+        </td>
+        
+        
+        <td>
+         
+
+         <?php if($car['status'] ==='available'){?>
+         <a class="btn btn-primary btn-lg" href="car.php?id=<?=$car['car_id'] ?>";>View Car</a>
+
+           <?php } else {?>
+        <a class="btn btn-secondary" disabled>Unavailable</a>
+         <?php } ?>
+        </td>
+       
+      </tr>
+
+     <?php } ?>
    </table>
 
 </div>
 
-<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<?php
+ <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+ <?php
 
 ?>
 </body>

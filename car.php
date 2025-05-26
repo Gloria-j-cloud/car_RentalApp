@@ -1,5 +1,28 @@
 <?php 
-    $cars = [
+    
+    require_once "config/db-connect.php";
+    $id = $_GET['id'];
+
+    if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: cars.php");
+    exit();
+  };
+
+  if(($_GET['id'] >1000)) {
+    header("Location: cars.php");
+    exit();
+  }; 
+
+    $sql = "SELECT * FROM cars WHERE  car_id= ? ";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$id]);
+    $selectedCar=$stmt->fetch(PDO::FETCH_ASSOC);
+
+
+ 
+    /*
+    [
         [
         'id' => 1,
         'make' => 'toyota',
@@ -58,35 +81,28 @@
        
         'daily_rate' => '$40',
         'status' => 'available',
-        'image' => 'https://images.app.goo.gl/sCJHHkmxfxtEpCqs6'
+        
         ],
 
 
     ];
 
-if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header("Location: cars.php");
-    exit();
-  };
+    */
 
-  if(($_GET['id'] >1000)) {
-    header("Location: cars.php");
-    exit();
-  }
-   ; 
+
 /* if(array_filter($cars, fn($car) =>
     $car['id'] >1000));
     header("Location: cars.php");
     exit();
 
  */
-  $selectedCar = array_filter($cars, function($car) { 
-  return $car['id']== $_GET['id'];
+ // $selectedCar = array_filter($cars, function($car) { 
+//  return $car['id']== $_GET['id'];
 
-  });
+ // });
   
 
-   $selectedCar = reset($selectedCar);
+  // $selectedCar = reset($selectedCar);
  // echo $_GET['id'];
  //  var_dump($selectedCar)
 
@@ -94,6 +110,9 @@ if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: cars.php");
     exit();
  }
+ 
+ $today = date('Y-m-d');
+ $max_date = date('Y-m-d', strtotime('+7days'));
 ?>
 
 <!DOCTYPE html>
@@ -108,19 +127,42 @@ if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 <body>
  
 <div class="container">
-<h1 class= "display-4 mb-4 mt-4" style="text-decoration: underline; text-align:center"> Welcome to Car View</h1>
+  <h1 class= "display-4 mb-4 mt-4 " style="text-align:center"> Welcome to Car View</h1>
    
-<div class="">
-    <h2 class=""> Car Make:<?= $selectedCar['make']?> </h2>
-    <h2> Car Model:<?= $selectedCar['model']?></h2> 
-    <h2>  Year:<?= $selectedCar['year']?> </h2>
-    <h2> Daily_rate:<?= $selectedCar['daily_rate']?> </h2>
-    <h2> status:<?= $selectedCar['status']?> </h2>
-  <!--  <img src="<?= $selectedCar['image']?>" alt="car.jpg"/> -->
+  <div class="">
 
+       <h2 class="mb-4 "><?= $selectedCar['car_make']?> </h2>
+    <ul>
+     
+     <li> <strong>Car Model:</strong><?= $selectedCar['car_model']?></li> 
+     <li> <strong>Year:</strong><?= $selectedCar['year']?> </li>
+     <li> <strong>Daily_rate:</strong><?= "$" . $selectedCar['daily_rate']?> </li>
+     <li> <strong>status:</strong><?= $selectedCar['status']?> </li>
+  </ul>
+  </div>
 </div>
-</div>
+
+  <div class="container mt-5">
+    <form action="processes/hire-process.php" method="POST">
   
+     <input type="date" name="return_date" placeholder="car id" class="form-control shadow-sm mt-3" required max="<?= $max_date; ?>" min="<?= $today; ?>">
+
+     <input type="number" name="car_id" placeholder="car id" value="<?php echo $selectedCar['car_id'] ?>" class="form-control shadow-sm mt-3" hidden>
+     
+     <input type="hidden" name="daily_rate"  value="<?php echo $selectedCar['daily_rate'] ?>" class="form-control shadow-sm mt-3">
+ 
+     <input type="text" name="first_name" placeholder="Enter First Name" class="form-control shadow-sm mt-3">
+ 
+     <input type="text" name="last_name" placeholder="Enter Last Name" class="form-control shadow-sm mt-3">
+    
+     <input type="tel" name="phone" placeholder="Enter phone number" class="form-control shadow-sm mt-3">
+      
+     <input type="email" name="email" placeholder="Enter email" class="form-control shadow-sm mt-3">
+     <input type="submit" name="hire" value="Hire" class="btn btn-primary mt-3">
+
+
+    </form>
+  </div>
 
 </body>
 </html>

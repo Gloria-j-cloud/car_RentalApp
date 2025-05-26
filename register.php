@@ -19,7 +19,7 @@
    <input type="text" name="last_name" placeholder="Enter Last Name" class="form-control shadow-sm mt-3">
     
    <input type="tel" name="phone" placeholder="Enter phone number" class="form-control shadow-sm mt-3">
-  
+      
    <input type="email" name="email" placeholder="Enter email" class="form-control shadow-sm mt-3">
    <input type="submit" name="submit" value="submit" class="btn btn-primary mt-3">
 
